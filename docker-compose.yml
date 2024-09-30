@@ -1,0 +1,19 @@
+version: '3' # Menggunakan versi Docker Compose 3
+
+services:
+  item-app:
+    image: ghcr.io/christiantokape/a433-microservices/item-app:v1 # Menggunakan image item-app versi v1 yang diambil dari GitHub Container Registry (ghcr.io)
+    ports:
+      - "80:3000" # Memetakan port 80 di host ke port 3000 di container (host:container), sehingga aplikasi dapat diakses dari port 80 di host
+    depends_on:
+      - item-db # Mengatur agar service item-app hanya akan berjalan setelah item-db berhasil dijalankan
+    restart: always # Memastikan container akan restart otomatis jika berhenti karena kesalahan atau shutdown
+
+  item-db:
+    image: mongo:3 # Menggunakan image MongoDB versi 3 dari Docker Hub
+    volumes:
+      - app-db:/data/db # Menggunakan volume bernama app-db untuk penyimpanan data persisten di /data/db dalam container
+    restart: always # Memastikan container MongoDB akan restart otomatis jika berhenti karena kesalahan atau shutdown
+
+volumes:
+  app-db: # Mendefinisikan volume bernama app-db untuk menyimpan data database secara persisten di luar container
